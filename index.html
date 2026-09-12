@@ -210,7 +210,7 @@
           </div>
         </div>
 
-        <!-- 行前確認清單 (網址改為右上箭頭 ↗，隱藏於修改介面中) -->
+        <!-- 行前確認清單 -->
         <div class="app-card p-5">
           <div class="flex items-center justify-between mb-2.5">
             <div>
@@ -474,11 +474,11 @@
         </div>
       </section>
 
-      <!-- ================= 4. Account 分頁 (PROFILE TAB - 可更換大頭貼與編輯資料) ================= -->
+      <!-- ================= 4. Account 分頁 (PROFILE TAB - 可更換頭貼與編輯資料) ================= -->
       <section v-if="currentTab === 'PROFILE'" class="space-y-4">
         <div class="app-card p-5 text-center space-y-3">
-          <!-- 大頭貼 (點擊可透過 Prompt 更換圖片網址或拍照上傳) -->
-          <div class="relative w-20 h-20 mx-group mx-auto cursor-pointer group" @click="changeAvatar" title="點擊更換照片">
+          <!-- 大頭貼 (點擊可更換照片) -->
+          <div class="relative w-20 h-20 mx-auto cursor-pointer group" @click="changeAvatar" title="點擊更換照片">
             <img :src="accountInfo.avatar" class="w-20 h-20 rounded-full object-cover border-2 border-stone-200 shadow-md mx-auto" />
             <div class="absolute inset-0 bg-black/30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-[10px]">
               更換照片
@@ -503,7 +503,7 @@
 
           <div class="pt-2 border-t border-stone-100 text-xs text-stone-400 space-y-1">
             <p>行程資料庫：LocalStorage (全自動離線同步)</p>
-            <p>目前版本：v4.9 Mobile Pro Edition</p>
+            <p>目前版本：v5.0 Mobile Pro Edition</p>
           </div>
         </div>
       </section>
@@ -1381,11 +1381,11 @@
         };
 
         onMounted(() => {
-          const savedItinerary = localStorage.getItem('seoul_2026_itinerary_v17');
+          const savedItinerary = localStorage.getItem('seoul_2026_itinerary_v18');
           if (savedItinerary) {
             try { itineraryData.value = JSON.parse(savedItinerary); } catch (e) {}
           }
-          const savedCart = localStorage.getItem('seoul_2026_cart_v17');
+          const savedCart = localStorage.getItem('seoul_2026_cart_v18');
           if (savedCart) {
             try { shoppingList.value = JSON.parse(savedCart); } catch (e) {}
           }
@@ -1393,19 +1393,19 @@
           if (savedExpenses) {
             try { expenses.value = JSON.parse(savedExpenses); } catch (e) {}
           }
-          const savedChecklist = localStorage.getItem('seoul_2026_checklist_v14');
+          const savedChecklist = localStorage.getItem('seoul_2026_checklist_v15');
           if (savedChecklist) {
             try { checklist.value = JSON.parse(savedChecklist); } catch (e) {}
           }
-          const savedFlight = localStorage.getItem('seoul_2026_flight_v3');
+          const savedFlight = localStorage.getItem('seoul_2026_flight_v4');
           if (savedFlight) {
             try { flightInfo.value = JSON.parse(savedFlight); } catch (e) {}
           }
-          const savedHotel = localStorage.getItem('seoul_2026_hotel_v3');
+          const savedHotel = localStorage.getItem('seoul_2026_hotel_v4');
           if (savedHotel) {
             try { hotelInfo.value = JSON.parse(savedHotel); } catch (e) {}
           }
-          const savedAccount = localStorage.getItem('seoul_2026_account_v3');
+          const savedAccount = localStorage.getItem('seoul_2026_account_v4');
           if (savedAccount) {
             try { accountInfo.value = JSON.parse(savedAccount); } catch (e) {}
           }
@@ -1415,11 +1415,11 @@
         });
 
         watch(itineraryData, (val) => {
-          localStorage.setItem('seoul_2026_itinerary_v17', JSON.stringify(val));
+          localStorage.setItem('seoul_2026_itinerary_v18', JSON.stringify(val));
         }, { deep: true });
 
         watch(shoppingList, (val) => {
-          localStorage.setItem('seoul_2026_cart_v17', JSON.stringify(val));
+          localStorage.setItem('seoul_2026_cart_v18', JSON.stringify(val));
         }, { deep: true });
 
         watch(expenses, (val) => {
@@ -1427,19 +1427,19 @@
         }, { deep: true });
 
         watch(checklist, (val) => {
-          localStorage.setItem('seoul_2026_checklist_v14', JSON.stringify(val));
+          localStorage.setItem('seoul_2026_checklist_v15', JSON.stringify(val));
         }, { deep: true });
 
         watch(flightInfo, (val) => {
-          localStorage.setItem('seoul_2026_flight_v3', JSON.stringify(val));
+          localStorage.setItem('seoul_2026_flight_v4', JSON.stringify(val));
         }, { deep: true });
 
         watch(hotelInfo, (val) => {
-          localStorage.setItem('seoul_2026_hotel_v3', JSON.stringify(val));
+          localStorage.setItem('seoul_2026_hotel_v4', JSON.stringify(val));
         }, { deep: true });
 
         watch(accountInfo, (val) => {
-          localStorage.setItem('seoul_2026_account_v3', JSON.stringify(val));
+          localStorage.setItem('seoul_2026_account_v4', JSON.stringify(val));
         }, { deep: true });
 
         watch(currentTab, (val) => {
