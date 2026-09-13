@@ -31,12 +31,12 @@
             kborder: 'rgba(231, 229, 228, 0.7)',
             ksubtext: '#8E8E93',
             morandi: {
-              food: '#B5838D',     // 莫蘭迪玫瑰褐
-              trans: '#6B8796',    // 莫蘭迪霧霾藍
-              spot: '#879883',     // 莫蘭迪灰綠
-              shop: '#C99E7A',     // 莫蘭迪駝色
-              stay: '#7E7A94',     // 莫蘭迪灰紫
-              clinic: '#8EA499',   // 莫蘭迪鼠尾草
+              food: '#B5838D',
+              trans: '#6B8796',
+              spot: '#879883',
+              shop: '#C99E7A',
+              stay: '#7E7A94',
+              clinic: '#8EA499',
               dark: '#2E2B2A'
             }
           },
@@ -55,6 +55,7 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       letter-spacing: -0.01em;
+      overflow-x: hidden;
     }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -90,21 +91,10 @@
     }
 
     @keyframes springBounceUp {
-      0% {
-        opacity: 0;
-        transform: translateY(100%) scale(0.96);
-      }
-      65% {
-        opacity: 1;
-        transform: translateY(-8px) scale(1.01);
-      }
-      85% {
-        transform: translateY(3px) scale(0.998);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      0% { opacity: 0; transform: translateY(100%) scale(0.96); }
+      65% { opacity: 1; transform: translateY(-8px) scale(1.01); }
+      85% { transform: translateY(3px) scale(0.998); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .modal-bounce-in {
@@ -122,11 +112,11 @@
     }
   </style>
 </head>
-<body class="font-sans antialiased text-stone-800 bg-kbg min-h-screen pb-24">
-  <div id="app" class="max-w-md mx-auto relative min-h-screen flex flex-col justify-between">
+<body class="font-sans antialiased text-stone-800 bg-kbg min-h-screen pb-24 w-full overflow-x-hidden">
+  <div id="app" class="w-full max-w-md mx-auto relative min-h-screen flex flex-col justify-between px-3 sm:px-0">
     
-    <!-- 頂部 Sticky 導航 (SERIF 字體標題，左側編輯切換，右側購物車) -->
-    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-5 pt-4 pb-2.5 border-b border-stone-200 shadow-[0_4px_16px_-4px_rgba(0,0,0,0.06)]">
+    <!-- 頂部 Sticky 導航 -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-3 sm:px-5 pt-4 pb-2.5 border-b border-stone-200 shadow-[0_4px_16px_-4px_rgba(0,0,0,0.06)] w-full">
       <div class="relative flex items-center justify-between">
         <!-- 左側編輯按鈕 -->
         <button @click="isEditMode = !isEditMode" class="text-stone-800 p-1 active:scale-95 transition" title="切換編輯模式">
@@ -137,9 +127,9 @@
           </svg>
         </button>
 
-        <!-- 正中間標題 "SEOUL 2026" (已刪除下方小灰字日期) -->
+        <!-- 正中間標題 "SEOUL 2026" (字體大小改為與 Home 頁面 SEOL TRIP 一樣大) -->
         <div class="text-center absolute left-1/2 transform -translate-x-1/2">
-          <h1 class="text-sm font-serif uppercase tracking-wider font-extrabold" style="font-family: 'Playfair Display', serif;">
+          <h1 class="text-xl font-serif font-bold text-stone-900 tracking-wider uppercase" style="font-family: 'Playfair Display', serif;">
             SEOUL 2026
           </h1>
         </div>
@@ -164,7 +154,7 @@
         </button>
       </div>
 
-      <!-- 永久常駐顯示的日行程導航列 (DAY0 ~ DAY3) -->
+      <!-- 日行程導航列 -->
       <nav class="flex items-center justify-between mt-3 px-1 border-t border-stone-100 pt-2.5">
         <button 
           v-for="day in dayTabs" 
@@ -187,12 +177,11 @@
     </header>
 
     <!-- 主體內容 -->
-    <main class="px-4.5 pt-4 flex-1">
+    <main class="w-full px-0.5 sm:px-4.5 pt-4 flex-1">
 
       <!-- ================= 0. HOME 分頁 ================= -->
-      <section v-if="currentTab === 'HOME'" class="space-y-4">
-        
-        <div class="app-card p-5 relative overflow-hidden">
+      <section v-if="currentTab === 'HOME'" class="space-y-4 w-full">
+        <div class="app-card p-5 relative overflow-hidden w-full">
           <div class="flex justify-between items-start">
             <div>
               <span class="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-serif tracking-widest uppercase bg-stone-100 text-stone-600 mb-2">Seoul Journey</span>
@@ -206,11 +195,11 @@
           </div>
           
           <div class="grid grid-cols-2 gap-2 mt-4 pt-3.5 border-t border-stone-100 text-xs">
-            <div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100/80">
+            <div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100/85">
               <span class="text-[9px] text-stone-400 uppercase tracking-wide block">FLIGHT (JIN AIR)</span>
               <span class="font-serif font-bold text-stone-800 mt-0.5 block">LJ734 / LJ733</span>
             </div>
-            <div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100/80">
+            <div class="bg-stone-50 p-2.5 rounded-xl border border-stone-100/85">
               <span class="text-[9px] text-stone-400 uppercase tracking-wide block">ACCOMMODATION</span>
               <span class="font-serif font-bold text-stone-800 mt-0.5 block truncate">ARA Hotel 東廟</span>
             </div>
@@ -218,7 +207,7 @@
         </div>
 
         <!-- 行前確認清單 -->
-        <div class="app-card p-5">
+        <div class="app-card p-5 w-full">
           <div class="flex items-center justify-between mb-2.5">
             <div>
               <span class="text-[9px] font-serif uppercase tracking-widest text-stone-400">Pre-Trip Checklist</span>
@@ -233,7 +222,7 @@
             <div 
               v-for="(task, idx) in checklist" 
               :key="idx"
-              class="flex items-center justify-between p-2.5 rounded-xl border transition-all"
+              class="flex items-center justify-between p-2.5 rounded-xl border transition-all w-full"
               :class="task.checked ? 'bg-stone-50/70 border-stone-100 text-stone-400' : 'bg-white border-stone-200/60 shadow-2xs text-stone-700'"
             >
               <div class="flex items-center gap-2.5 flex-1 min-w-0">
@@ -257,7 +246,7 @@
         </div>
 
         <!-- 首爾地圖 -->
-        <div class="app-card p-4">
+        <div class="app-card p-4 w-full">
           <div class="flex justify-between items-center mb-2.5">
             <div class="flex items-center gap-2">
               <span class="text-base">📍</span>
@@ -275,12 +264,11 @@
             <span>可自由縮放與拖曳</span>
           </div>
         </div>
-
       </section>
 
       <!-- ================= 1. 餐廳分頁 ================= -->
-      <section v-if="currentTab === 'FOOD_TAB'" class="space-y-4">
-        <div class="app-card p-5">
+      <section v-if="currentTab === 'FOOD_TAB'" class="space-y-4 w-full">
+        <div class="app-card p-5 w-full">
           <div class="flex justify-between items-center mb-3">
             <div>
               <span class="text-[9px] font-serif uppercase tracking-widest text-stone-400">Gourmet Selection</span>
@@ -290,11 +278,11 @@
           </div>
           <p class="text-xs text-stone-500 mb-4">點擊下方餐廳卡片可查看韓文點餐對話（Point & Speak），所有內容均可透過手機自由編輯。</p>
 
-          <div class="space-y-3">
+          <div class="space-y-3 w-full">
             <div 
               v-for="(spot, fIdx) in allFoodSpots" 
               :key="spot.id || fIdx"
-              class="p-4 rounded-2xl border border-stone-200/80 bg-white shadow-2xs space-y-2 cursor-pointer hover:border-stone-400 transition"
+              class="p-4 rounded-2xl border border-stone-200/80 bg-white shadow-2xs space-y-2 cursor-pointer hover:border-stone-400 transition w-full"
               @click="openModal(spot)"
             >
               <div class="flex justify-between items-center">
@@ -317,8 +305,8 @@
       </section>
 
       <!-- ================= 2. 資訊欄分頁 ================= -->
-      <section v-if="currentTab === 'INFO_TAB'" class="space-y-4">
-        <div class="app-card p-5 space-y-3">
+      <section v-if="currentTab === 'INFO_TAB'" class="space-y-4 w-full">
+        <div class="app-card p-5 space-y-3 w-full">
           <div class="flex justify-between items-center">
             <h3 class="text-xs font-serif font-bold uppercase tracking-widest text-stone-400">✈️ Flight Information</h3>
             <button @click="isInfoEdit = !isInfoEdit" class="text-xs px-2.5 py-1 bg-stone-800 text-white rounded-lg">
@@ -359,7 +347,7 @@
           </div>
         </div>
 
-        <div class="app-card p-5 space-y-3">
+        <div class="app-card p-5 space-y-3 w-full">
           <h3 class="text-xs font-serif font-bold uppercase tracking-widest text-stone-400">🏨 Hotel & Stay</h3>
           <div v-if="!isInfoEdit" class="p-3 bg-stone-50 rounded-xl border border-stone-100 text-xs space-y-1">
             <div class="font-bold text-stone-800 text-sm">{{ hotelInfo.name }}</div>
@@ -381,7 +369,7 @@
           </div>
         </div>
 
-        <div class="app-card p-5">
+        <div class="app-card p-5 w-full">
           <h3 class="text-xs font-serif font-bold uppercase tracking-widest text-stone-400 mb-3">🚨 Emergency Support</h3>
           <div class="grid grid-cols-2 gap-2 text-xs">
             <a href="tel:112" class="p-2.5 bg-stone-50 rounded-xl text-center border border-stone-100 active:scale-95 transition">
@@ -405,8 +393,8 @@
       </section>
 
       <!-- ================= 3. 記帳分頁 ================= -->
-      <section v-if="currentTab === 'BOOK'" class="space-y-4">
-        <div class="app-card p-5">
+      <section v-if="currentTab === 'BOOK'" class="space-y-4 w-full">
+        <div class="app-card p-5 w-full">
           <div class="flex justify-between items-center text-xs">
             <span class="text-[9px] font-serif uppercase tracking-widest text-stone-400">Total Expenses</span>
             <span class="text-[10px] bg-stone-100 px-2 py-0.5 rounded-md text-stone-500">當前匯率：1 TWD ≈ 42 KRW</span>
@@ -425,7 +413,7 @@
           </div>
         </div>
 
-        <div class="app-card p-4 space-y-2.5">
+        <div class="app-card p-4 space-y-2.5 w-full">
           <h3 class="text-xs font-bold text-stone-700 font-serif">新增一筆旅費記錄</h3>
           <div class="grid grid-cols-3 gap-2 text-xs">
             <input v-model="newRecord.title" placeholder="項目 (例: 囕盈豚烤肉)" class="col-span-2 bg-stone-50 border border-stone-200 rounded-xl px-3 py-2 outline-none" />
@@ -443,7 +431,7 @@
           </div>
         </div>
 
-        <div class="app-card p-4 space-y-2">
+        <div class="app-card p-4 space-y-2 w-full">
           <div class="flex justify-between items-center mb-1">
             <h3 class="text-xs font-bold text-stone-700 font-serif">支出明細清單</h3>
             <button @click="exportCSV" class="text-[11px] text-morandi-trans underline flex items-center gap-1">
@@ -458,7 +446,7 @@
           <div 
             v-for="(rec, rIdx) in expenses" 
             :key="rIdx" 
-            class="flex items-center justify-between py-2 border-b border-stone-50 last:border-0 text-xs group"
+            class="flex items-center justify-between py-2 border-b border-stone-50 last:border-0 text-xs group w-full"
           >
             <div class="flex-1 pr-2">
               <div class="font-medium text-stone-800">{{ rec.title }}</div>
@@ -483,10 +471,9 @@
         </div>
       </section>
 
-      <!-- ================= 4. Account 分頁 (已改為可編輯照片與個人資料) ================= -->
-      <section v-if="currentTab === 'PROFILE'" class="space-y-4">
-        <div class="app-card p-5 text-center space-y-4">
-          <!-- 頭像展示或自訂圖片預覽 -->
+      <!-- ================= 4. Account 分頁 ================= -->
+      <section v-if="currentTab === 'PROFILE'" class="space-y-4 w-full">
+        <div class="app-card p-5 text-center space-y-4 w-full">
           <div class="relative w-20 h-20 mx-auto group">
             <div class="w-20 h-20 rounded-full bg-stone-900 text-white text-2xl font-serif font-bold flex items-center justify-center mx-auto shadow-md overflow-hidden border-2 border-white">
               <img v-if="accountInfo.avatarUrl" :src="accountInfo.avatarUrl" class="w-full h-full object-cover" />
@@ -500,7 +487,7 @@
             <button @click="isAccountEdit = true" class="px-4 py-1.5 bg-stone-800 text-white rounded-full text-xs font-medium active:scale-95 transition">編輯帳戶與照片</button>
           </div>
 
-          <div v-else class="space-y-3 text-xs text-left bg-stone-50 p-4 rounded-2xl border border-stone-200">
+          <div v-else class="space-y-3 text-xs text-left bg-stone-50 p-4 rounded-2xl border border-stone-200 w-full">
             <div>
               <label class="block text-[10px] font-bold text-stone-500 mb-1">大頭貼圖片網址 (Image URL)</label>
               <input v-model="accountInfo.avatarUrl" placeholder="請輸入圖片網址 (https://...)" class="w-full bg-white border border-stone-200 p-2 rounded-xl outline-none" />
@@ -528,10 +515,10 @@
       </section>
 
       <!-- ================= 5. 每日行程分頁 (DAY0 ~ DAY3) ================= -->
-      <section v-if="['DAY0', 'DAY1', 'DAY2', 'DAY3'].includes(currentTab)" class="space-y-4">
+      <section v-if="['DAY0', 'DAY1', 'DAY2', 'DAY3'].includes(currentTab)" class="space-y-4 w-full">
         
         <!-- 每2小時天氣橫向捲軸 -->
-        <div class="app-card p-4">
+        <div class="app-card p-4 w-full">
           <div class="flex justify-between items-start mb-2.5">
             <div>
               <span class="text-[9px] font-serif uppercase tracking-widest text-stone-400">24H Weather Forecast</span>
@@ -557,8 +544,8 @@
           </div>
         </div>
 
-        <!-- 獨立同色系「新增」與「編輯」雙按鈕 (Icon 化) -->
-        <div class="flex items-center justify-between px-1">
+        <!-- 新增與編輯雙按鈕 -->
+        <div class="flex items-center justify-between px-1 w-full">
           <span class="text-xs font-bold text-stone-800 font-serif tracking-wider">ITINERARY</span>
           <div class="flex items-center gap-1.5">
             <button 
@@ -589,13 +576,13 @@
         <!-- 支援手勢觸控拖曳排序的清單容器 -->
         <div 
           id="itineraryList" 
-          class="relative pl-6 space-y-3.5 before:content-[''] before:absolute before:left-[11px] before:top-3 before:bottom-3 before:w-[1.5px] before:bg-stone-200"
+          class="relative pl-6 space-y-3.5 before:content-[''] before:absolute before:left-[11px] before:top-3 before:bottom-3 before:w-[1.5px] before:bg-stone-250 w-full"
         >
           <div 
             v-for="(spot, sIdx) in itineraryData[currentTab]" 
             :key="spot.id"
             :data-id="spot.id"
-            class="relative cursor-pointer group"
+            class="relative cursor-pointer group w-full"
           >
             <div 
               class="absolute -left-[19px] top-4 w-2.5 h-2.5 rounded-full border-2 border-white shadow-xs transition-transform group-hover:scale-125"
@@ -603,7 +590,7 @@
             ></div>
 
             <div 
-              class="app-card p-4 transition-all"
+              class="app-card p-4 transition-all w-full"
               :class="isEditMode ? 'border-dashed border-morandi-food/60' : 'active:scale-[0.99]'"
               @click="!isEditMode && openModal(spot)"
             >
@@ -631,7 +618,6 @@
                 {{ spot.summary }}
               </p>
 
-              <!-- 莫蘭迪色標籤 (可點擊修改) -->
               <div v-if="spot.tags && spot.tags.length" class="flex flex-wrap gap-1.5 mt-2.5">
                 <span 
                   v-for="(tg, tIdx) in spot.tags" 
@@ -693,8 +679,6 @@
 
     <!-- ================= 底部固定 Tab Bar ================= -->
     <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200 py-3.5 px-7 max-w-md mx-auto flex items-center justify-between shadow-[0_-4px_16px_-4px_rgba(0,0,0,0.04)]">
-      
-      <!-- 1. HOME -->
       <button @click="currentTab = 'HOME'" class="flex flex-col items-center transition-transform active:scale-90" :class="currentTab === 'HOME' ? 'text-stone-900 scale-110 font-bold' : 'text-stone-400'" title="HOME">
         <svg class="w-6 h-6 stroke-[1.8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -702,7 +686,6 @@
         </svg>
       </button>
 
-      <!-- 2. 餐廳 -->
       <button @click="currentTab = 'FOOD_TAB'" class="flex flex-col items-center transition-transform active:scale-90" :class="currentTab === 'FOOD_TAB' ? 'text-stone-900 scale-110 font-bold' : 'text-stone-400'" title="餐廳">
         <svg class="w-6 h-6 stroke-[1.8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -710,7 +693,6 @@
         </svg>
       </button>
 
-      <!-- 3. 資訊欄 -->
       <button @click="currentTab = 'INFO_TAB'" class="flex flex-col items-center transition-transform active:scale-90" :class="currentTab === 'INFO_TAB' ? 'text-stone-900 scale-110 font-bold' : 'text-stone-400'" title="資訊欄">
         <svg class="w-6 h-6 stroke-[1.8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="12" r="10"></circle>
@@ -719,7 +701,6 @@
         </svg>
       </button>
 
-      <!-- 4. 記帳 -->
       <button @click="currentTab = 'BOOK'" class="flex flex-col items-center transition-transform active:scale-90" :class="currentTab === 'BOOK' ? 'text-stone-900 scale-110 font-bold' : 'text-stone-400'" title="記帳">
         <svg class="w-6 h-6 stroke-[1.8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -730,7 +711,6 @@
         </svg>
       </button>
 
-      <!-- 5. Account -->
       <button @click="currentTab = 'PROFILE'" class="flex flex-col items-center transition-transform active:scale-90" :class="currentTab === 'PROFILE' ? 'text-stone-900 scale-110 font-bold' : 'text-stone-400'" title="Account">
         <svg class="w-6 h-6 stroke-[1.8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -746,7 +726,6 @@
       @click.self="showCartModal = false"
     >
       <div class="w-full max-w-md bg-[#FBFBFA] rounded-t-[32px] max-h-[90vh] overflow-y-auto p-5 pb-9 shadow-2xl relative modal-bounce-in flex flex-col">
-        
         <div class="flex items-center justify-between pb-3">
           <div class="flex items-center gap-2">
             <div class="w-7 h-7 rounded-xl bg-[#3D2D27] text-white flex items-center justify-center shadow-xs">
@@ -881,12 +860,10 @@
                     </svg>
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -970,7 +947,6 @@
       @click.self="selectedModal = null"
     >
       <div class="w-full max-w-md bg-white rounded-t-[28px] max-h-[88vh] overflow-y-auto p-5 pb-8 shadow-2xl relative modal-bounce-in">
-        
         <div class="flex items-center justify-between pb-3 border-b border-stone-100">
           <span 
             class="text-[10px] font-serif uppercase tracking-widest px-2.5 py-0.5 rounded-full font-semibold"
@@ -1056,7 +1032,6 @@
             <p>{{ selectedModal.tips }}</p>
           </div>
         </div>
-
       </div>
     </div>
 
@@ -1307,7 +1282,7 @@
             id: Date.now(),
             title: newCartItem.value.title,
             store: newCartItem.value.store,
-            priceTWD: newCartItem.value.priceTWD || 0,
+            priceTWD: newCartItem.value.priceTWP || 0,
             img: newCartItem.value.title.startsWith('http') ? newCartItem.value.title : '',
             link: newCartItem.value.title.startsWith('http') ? newCartItem.value.title : '',
             bought: false
