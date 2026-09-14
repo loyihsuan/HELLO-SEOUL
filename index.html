@@ -118,9 +118,9 @@
     <!-- 頂部 Sticky 導航 -->
     <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md px-3 sm:px-5 pt-4 pb-2.5 border-b border-stone-200 shadow-[0_4px_16px_-4px_rgba(0,0,0,0.06)] w-full">
       <div class="relative flex items-center justify-between">
-        <!-- 左側編輯按鈕 -->
-        <button @click="isEditMode = !isEditMode" class="text-stone-800 p-1 active:scale-95 transition" title="切換編輯模式">
-          <svg class="w-6 h-6 stroke-[1.8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <!-- 左側三條線 Icon (縮小、無邊框) -->
+        <button @click="isEditMode = !isEditMode" class="text-stone-700 p-1 active:scale-95 transition" title="切換編輯模式">
+          <svg class="w-5 h-5 stroke-[1.8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
@@ -179,7 +179,7 @@
     <!-- 主體內容 -->
     <main class="w-full px-0.5 sm:px-4.5 pt-4 flex-1">
 
-      <!-- ================= 0. HOME 分頁 ================= -->
+      <!-- ================= 0. HOME 分頁 (預設主畫面) ================= -->
       <section v-if="currentTab === 'HOME'" class="space-y-4 w-full">
         <div class="app-card p-5 relative overflow-hidden w-full">
           <div class="flex justify-between items-start">
@@ -206,46 +206,59 @@
           </div>
         </div>
 
-        <!-- 行前確認清單 -->
-        <div class="app-card p-5 w-full">
-          <div class="flex items-center justify-between mb-2.5">
+        <!-- 行前確認清單 (附帶進度條、打勾刪除線與進階網址 Icon) -->
+        <div class="app-card p-5 w-full space-y-3">
+          <div class="flex items-center justify-between">
             <div>
-              <span class="text-[9px] font-serif uppercase tracking-widest text-stone-400">Pre-Trip Checklist</span>
-              <h3 class="text-sm font-bold text-stone-800">行前準備與待辦清單</h3>
+              <span class="text-[9px] font-serif uppercase tracking-widest text-stone-400 block">PRE-TRIP CHECKLIST</span>
+              <h3 class="text-base font-serif font-bold text-stone-900 mt-0.5">行前準備與待辦清單</h3>
             </div>
-            <div class="flex items-center gap-2">
-              <button @click="addChecklistItem" class="text-[11px] text-morandi-food underline font-bold">＋ 新增</button>
+            <div class="text-xs font-serif font-bold text-stone-400">
+              <span class="text-stone-900">{{ checklist.filter(i => i.checked).length }}</span> / {{ checklist.length }}
             </div>
           </div>
 
-          <div class="space-y-2">
+          <!-- 進度條 -->
+          <div class="w-full h-1.5 bg-stone-100 rounded-full overflow-hidden">
+            <div 
+              class="h-full bg-morandi-food rounded-full transition-all duration-300"
+              :style="{ width: `${(checklist.filter(i => i.checked).length / checklist.length) * 100}%` }"
+            ></div>
+          </div>
+
+          <div v-if="isEditMode" class="flex justify-end">
+            <button @click="addChecklistItem" class="text-[11px] text-morandi-food underline font-bold">＋ 新增項目</button>
+          </div>
+
+          <div class="space-y-2.5 pt-1">
             <div 
               v-for="(task, idx) in checklist" 
               :key="idx"
-              class="flex items-center justify-between p-2.5 rounded-xl border transition-all w-full"
-              :class="task.checked ? 'bg-stone-50/70 border-stone-100 text-stone-400' : 'bg-white border-stone-200/60 shadow-2xs text-stone-700'"
+              class="flex items-center justify-between p-3 rounded-2xl border transition-all w-full shadow-2xs"
+              :class="task.checked ? 'bg-stone-50/70 border-stone-100 text-stone-400' : 'bg-white border-stone-200/70 text-stone-800'"
             >
-              <div class="flex items-center gap-2.5 flex-1 min-w-0">
+              <div class="flex items-center gap-3 flex-1 min-w-0">
                 <div 
                   @click="toggleTask(idx)"
-                  class="w-4.5 h-4.5 rounded-md border flex items-center justify-center shrink-0 cursor-pointer transition-colors"
-                  :class="task.checked ? 'bg-stone-800 border-stone-800 text-white' : 'border-stone-300 bg-white'"
+                  class="w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 cursor-pointer transition-colors shadow-2xs"
+                  :class="task.checked ? 'bg-stone-900 border-stone-900 text-white' : 'border-stone-300 bg-white'"
                 >
-                  <span v-if="task.checked" class="text-[10px]">✓</span>
+                  <span v-if="task.checked" class="text-[11px] font-bold">✓</span>
                 </div>
-                <input v-model="task.title" class="bg-transparent text-xs font-medium w-full outline-none" :class="{ 'line-through': task.checked }" />
+                <input v-model="task.title" :disabled="!isEditMode" class="bg-transparent text-xs font-medium w-full outline-none" :class="{ 'line-through text-stone-400': task.checked }" />
               </div>
 
-              <div class="flex items-center gap-1.5 shrink-0 ml-2">
-                <input v-if="isEditMode" v-model="task.link" placeholder="輸入網址..." class="w-20 bg-stone-50 border border-stone-200 rounded px-1.5 py-0.5 text-[10px] outline-none text-morandi-trans" />
-                <a v-if="task.link" :href="task.link" target="_blank" class="w-6 h-6 rounded-full bg-stone-50 border border-stone-200 text-stone-600 flex items-center justify-center text-xs font-bold hover:bg-stone-100 transition" title="前往超連結">↗</a>
+              <!-- 網址僅顯示 Icon ↗，不顯示文字 -->
+              <div class="flex items-center gap-2 shrink-0 ml-2">
+                <input v-if="isEditMode" v-model="task.link" placeholder="輸入網址..." class="w-24 bg-stone-50 border border-stone-200 rounded px-1.5 py-0.5 text-[10px] outline-none text-morandi-trans" />
+                <a v-if="task.link" :href="task.link" target="_blank" class="w-6 h-6 rounded-full bg-stone-50 border border-stone-200 text-stone-600 flex items-center justify-center text-xs font-bold hover:bg-stone-100 transition shadow-2xs" title="前往網址">↗</a>
                 <button v-if="isEditMode" @click="checklist.splice(idx, 1)" class="text-stone-300 hover:text-rose-500 text-xs">✕</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 首爾地圖 (改為 Google Map 嵌入預覽) -->
+        <!-- 首爾地圖 (Google Maps 預覽) -->
         <div class="app-card p-4 w-full">
           <div class="flex justify-between items-center mb-2.5">
             <div class="flex items-center gap-2">
@@ -272,7 +285,7 @@
         </div>
       </section>
 
-      <!-- ================= 1. 餐廳分頁 ================= -->
+      <!-- ================= 1. 餐廳分頁 (編輯狀態下可見新增或修改，一般狀態隱藏編輯連結) ================= -->
       <section v-if="currentTab === 'FOOD_TAB'" class="space-y-4 w-full">
         <div class="app-card p-5 w-full">
           <div class="flex justify-between items-center mb-3">
@@ -280,7 +293,8 @@
               <span class="text-[9px] font-serif uppercase tracking-widest text-stone-400">Gourmet Selection</span>
               <h2 class="text-base font-serif font-bold text-stone-900">首爾精選美食推薦</h2>
             </div>
-            <button @click="openAddSpotModal('FOOD')" class="px-3 py-1 bg-stone-900 text-white rounded-full text-xs font-medium">＋ 新增餐廳</button>
+            <!-- 透過左上三條線進入編輯模式後才會顯示新增餐廳 -->
+            <button v-if="isEditMode" @click="openAddSpotModal('FOOD')" class="px-3 py-1 bg-stone-900 text-white rounded-full text-xs font-medium">＋ 新增餐廳</button>
           </div>
 
           <div class="space-y-3 w-full">
@@ -288,7 +302,7 @@
               v-for="(spot, fIdx) in allFoodSpots" 
               :key="spot.id || fIdx"
               class="p-4 rounded-2xl border border-stone-200/80 bg-white shadow-2xs space-y-2 cursor-pointer hover:border-stone-400 transition w-full"
-              @click="openModal(spot)"
+              @click="!isEditMode && openModal(spot)"
             >
               <div class="flex justify-between items-center">
                 <span class="text-[10px] font-serif px-2 py-0.5 rounded-full bg-morandi-food/15 text-morandi-food font-bold">【FOOD】</span>
@@ -301,7 +315,8 @@
                 <span class="text-stone-400 truncate max-w-[200px]">{{ spot.address || '查看菜單與詳情' }}</span>
                 <div class="flex gap-2">
                   <a v-if="spot.naverMap" :href="spot.naverMap" target="_blank" @click.stop class="w-7 h-7 rounded-full bg-stone-50 border border-stone-200 text-emerald-700 flex items-center justify-center hover:bg-emerald-50 transition" title="Naver Map">📍</a>
-                  <button @click.stop="openEditSpotModal(spot, fIdx)" class="text-stone-500 underline">編輯</button>
+                  <!-- 透過左上三條線進入編輯模式時才顯示編輯按鈕 -->
+                  <button v-if="isEditMode" @click.stop="openEditSpotModal(spot, fIdx)" class="text-stone-500 underline font-medium px-2 py-0.5 bg-stone-100 rounded">編輯</button>
                 </div>
               </div>
             </div>
@@ -309,17 +324,16 @@
         </div>
       </section>
 
-      <!-- ================= 2. 資訊欄分頁 ================= -->
+      <!-- ================= 2. 資訊欄分頁 (透過左上三條線切換編輯狀態) ================= -->
       <section v-if="currentTab === 'INFO_TAB'" class="space-y-4 w-full">
         <div class="app-card p-5 space-y-3 w-full">
           <div class="flex justify-between items-center">
             <h3 class="text-xs font-serif font-bold uppercase tracking-widest text-stone-400">✈️ Flight Information</h3>
-            <button @click="isInfoEdit = !isInfoEdit" class="text-xs px-2.5 py-1 bg-stone-800 text-white rounded-lg">
-              {{ isInfoEdit ? '完成' : '編輯資訊' }}
-            </button>
+            <!-- 隱藏原本的單獨編輯按鈕，改由左上三條線控制 isEditMode -->
+            <span v-if="isEditMode" class="text-[10px] bg-morandi-food/15 text-morandi-food px-2 py-0.5 rounded font-bold">編輯中</span>
           </div>
 
-          <div v-if="!isInfoEdit" class="space-y-2.5 text-xs">
+          <div v-if="!isEditMode" class="space-y-2.5 text-xs">
             <div class="p-3 bg-stone-50 rounded-xl border border-stone-100">
               <div class="flex justify-between font-serif font-bold text-stone-800">
                 <span>{{ flightInfo.outboundTitle }}</span>
@@ -339,22 +353,22 @@
             </div>
           </div>
 
-          <div v-else class="space-y-2 text-xs">
-            <input v-model="flightInfo.outboundTitle" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="去程標題" />
-            <input v-model="flightInfo.outboundRoute" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="去程航線" />
-            <input v-model="flightInfo.outboundTime" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="去程時間" />
-            <input v-model="flightInfo.outboundNote" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="去程備註" />
+          <div v-else class="space-y-2 text-xs bg-stone-50 p-3 rounded-xl border">
+            <input v-model="flightInfo.outboundTitle" class="w-full bg-white border p-1.5 rounded" placeholder="去程標題" />
+            <input v-model="flightInfo.outboundRoute" class="w-full bg-white border p-1.5 rounded" placeholder="去程航線" />
+            <input v-model="flightInfo.outboundTime" class="w-full bg-white border p-1.5 rounded" placeholder="去程時間" />
+            <input v-model="flightInfo.outboundNote" class="w-full bg-white border p-1.5 rounded" placeholder="去程備註" />
             <hr class="my-2"/>
-            <input v-model="flightInfo.inboundTitle" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="回程標題" />
-            <input v-model="flightInfo.inboundRoute" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="回程航線" />
-            <input v-model="flightInfo.inboundTime" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="回程時間" />
-            <input v-model="flightInfo.inboundNote" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="回程備註" />
+            <input v-model="flightInfo.inboundTitle" class="w-full bg-white border p-1.5 rounded" placeholder="回程標題" />
+            <input v-model="flightInfo.inboundRoute" class="w-full bg-white border p-1.5 rounded" placeholder="回程航線" />
+            <input v-model="flightInfo.inboundTime" class="w-full bg-white border p-1.5 rounded" placeholder="回程時間" />
+            <input v-model="flightInfo.inboundNote" class="w-full bg-white border p-1.5 rounded" placeholder="回程備註" />
           </div>
         </div>
 
         <div class="app-card p-5 space-y-3 w-full">
           <h3 class="text-xs font-serif font-bold uppercase tracking-widest text-stone-400">🏨 Hotel & Stay</h3>
-          <div v-if="!isInfoEdit" class="p-3 bg-stone-50 rounded-xl border border-stone-100 text-xs space-y-1">
+          <div v-if="!isEditMode" class="p-3 bg-stone-50 rounded-xl border border-stone-100 text-xs space-y-1">
             <div class="font-bold text-stone-800 text-sm">{{ hotelInfo.name }}</div>
             <div class="text-stone-600">地址：{{ hotelInfo.address }}</div>
             <div class="text-stone-500 text-[11px]">入住：{{ hotelInfo.checkin }} ｜ 退房：{{ hotelInfo.checkout }}</div>
@@ -364,13 +378,13 @@
             </div>
           </div>
 
-          <div v-else class="space-y-2 text-xs">
-            <input v-model="hotelInfo.name" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="飯店名稱" />
-            <input v-model="hotelInfo.address" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="飯店地址" />
-            <input v-model="hotelInfo.checkin" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="入住時間" />
-            <input v-model="hotelInfo.checkout" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="退房時間" />
-            <input v-model="hotelInfo.naver" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="Naver 導航網址" />
-            <input v-model="hotelInfo.voucher" class="w-full bg-stone-50 border p-1.5 rounded" placeholder="憑證網址" />
+          <div v-else class="space-y-2 text-xs bg-stone-50 p-3 rounded-xl border">
+            <input v-model="hotelInfo.name" class="w-full bg-white border p-1.5 rounded" placeholder="飯店名稱" />
+            <input v-model="hotelInfo.address" class="w-full bg-white border p-1.5 rounded" placeholder="飯店地址" />
+            <input v-model="hotelInfo.checkin" class="w-full bg-white border p-1.5 rounded" placeholder="入住時間" />
+            <input v-model="hotelInfo.checkout" class="w-full bg-white border p-1.5 rounded" placeholder="退房時間" />
+            <input v-model="hotelInfo.naver" class="w-full bg-white border p-1.5 rounded" placeholder="Naver 導航網址" />
+            <input v-model="hotelInfo.voucher" class="w-full bg-white border p-1.5 rounded" placeholder="憑證網址" />
           </div>
         </div>
 
@@ -397,7 +411,7 @@
         </div>
       </section>
 
-      <!-- ================= 3. 記帳分頁 (完全對應您提供的圖片樣式，並支援新增時切換台幣/韓元) ================= -->
+      <!-- ================= 3. 記帳分頁 ================= -->
       <section v-if="currentTab === 'BOOK'" class="space-y-4 w-full">
         <div class="app-card p-5 w-full">
           <div class="flex justify-between items-center text-xs">
@@ -418,7 +432,7 @@
           </div>
         </div>
 
-        <!-- 新增一筆旅費記錄 (可選擇台幣或韓元，預設韓元) -->
+        <!-- 新增一筆旅費記錄 -->
         <div class="app-card p-4 space-y-2.5 w-full">
           <h3 class="text-xs font-bold text-stone-700 font-serif">新增一筆旅費記錄</h3>
           <div class="grid grid-cols-3 gap-2 text-xs">
@@ -441,7 +455,7 @@
           </div>
         </div>
 
-        <!-- 支出明細清單 (完全對應您上傳圖片的排版風格：主金額大字韓元、副金額小字台幣、右側刪除按鈕) -->
+        <!-- 支出明細清單 -->
         <div class="app-card p-4 space-y-3 w-full">
           <div class="flex justify-between items-center mb-1">
             <h3 class="text-xs font-bold text-stone-700 font-serif">支出明細清單</h3>
@@ -467,7 +481,6 @@
 
               <div class="flex items-center gap-3">
                 <div class="text-right space-y-0.5">
-                  <!-- 主金額顯示韓元，若原輸入為台幣則換算，或反之 -->
                   <div class="font-serif font-bold text-stone-900 text-sm">
                     {{ rec.currency === 'TWD' ? `NT$ ${rec.amount.toLocaleString()}` : `₩ ${rec.amount.toLocaleString()}` }}
                   </div>
@@ -527,7 +540,7 @@
 
           <div class="pt-2 border-t border-stone-100 text-xs text-stone-400 space-y-1">
             <p>行程資料庫 : LocalStorage (全自動離線同步)</p>
-            <p>目前版本 : v5.2 Mobile Pro Edition</p>
+            <p>目前版本 : v5.6 Mobile Pro Edition</p>
           </div>
         </div>
       </section>
@@ -1060,7 +1073,8 @@
 
     createApp({
       setup() {
-        const currentTab = ref('DAY1');
+        // 設定進入網頁的第一個主畫面為 HOME 頁
+        const currentTab = ref('HOME');
         const selectedModal = ref(null);
         const showCartModal = ref(false);
         const copyStatus = ref(false);
@@ -1187,13 +1201,12 @@
           return [...list, ...extraFoods];
         });
 
-        // 旅費記錄陣營：預設幣別皆支援，金額以當初輸入為主
         const expenses = ref([
           { title: 'Link korea', category: 'SHOP', amount: 14580, currency: 'KRW', date: '09/19' },
           { title: '東廟 SPAREX 汗蒸幕入場 (2人)', category: 'STAY', amount: 30000, currency: 'KRW', date: '09/19' },
           { title: '囕盈豚 烤肉晚餐', category: 'FOOD', amount: 84000, currency: 'KRW', date: '09/19' },
           { title: '漢南洞馬鈴薯排骨湯', category: 'FOOD', amount: 48000, currency: 'KRW', date: '09/20' },
-          { title: '清溪川 e-mart 零食採購', category: 'SHOP', amount: 92000, currency: 'KRW', date: '09/20' },
+          { title: '清溪川 emart 零食採購', category: 'SHOP', amount: 92000, currency: 'KRW', date: '09/20' },
           { title: 'AREX 機場快線直達票 (2人)', category: 'TRANS', amount: 22000, currency: 'KRW', date: '09/21' }
         ]);
         const newRecord = ref({ title: '', category: 'FOOD', amount: null, currency: 'KRW' });
@@ -1363,11 +1376,11 @@
           if (savedCart) {
             try { shoppingList.value = JSON.parse(savedCart); } catch (e) {}
           }
-          const savedExpenses = localStorage.getItem('seoul_2026_expenses_v4');
+          const savedExpenses = localStorage.getItem('seoul_2026_expenses_v6');
           if (savedExpenses) {
             try { expenses.value = JSON.parse(savedExpenses); } catch (e) {}
           }
-          const savedChecklist = localStorage.getItem('seoul_2026_checklist_v13');
+          const savedChecklist = localStorage.getItem('seoul_2026_checklist_v17');
           if (savedChecklist) {
             try { checklist.value = JSON.parse(savedChecklist); } catch (e) {}
           }
@@ -1396,11 +1409,11 @@
         }, { deep: true });
 
         watch(expenses, (val) => {
-          localStorage.setItem('seoul_2026_expenses_v4', JSON.stringify(val));
+          localStorage.setItem('seoul_2026_expenses_v6', JSON.stringify(val));
         }, { deep: true });
 
         watch(checklist, (val) => {
-          localStorage.setItem('seoul_2026_checklist_v13', JSON.stringify(val));
+          localStorage.setItem('seoul_2026_checklist_v17', JSON.stringify(val));
         }, { deep: true });
 
         watch(flightInfo, (val) => {
